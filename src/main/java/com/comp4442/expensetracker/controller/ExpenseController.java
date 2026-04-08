@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
@@ -22,5 +24,11 @@ public class ExpenseController {
     public ResponseEntity<ExpenseResponse> createExpense(@Valid @RequestBody CreateExpenseRequest request) {
         ExpenseResponse createdExpense = expenseService.createExpense(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdExpense);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ExpenseResponse>> getAllExpenses() {
+        List<ExpenseResponse> expenses = expenseService.getAllExpenses();
+        return ResponseEntity.ok(expenses);
     }
 }

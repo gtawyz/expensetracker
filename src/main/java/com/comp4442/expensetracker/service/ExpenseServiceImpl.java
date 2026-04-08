@@ -6,6 +6,8 @@ import com.comp4442.expensetracker.entity.Expense;
 import com.comp4442.expensetracker.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
 
@@ -28,6 +30,14 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense savedExpense = expenseRepository.save(expense);
 
         return mapToResponse(savedExpense);
+    }
+
+    @Override
+    public List<ExpenseResponse> getAllExpenses() {
+        return expenseRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     private ExpenseResponse mapToResponse(Expense expense) {
