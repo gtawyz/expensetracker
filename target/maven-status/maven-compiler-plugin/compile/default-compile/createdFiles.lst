@@ -1,2 +1,5 @@
+com\comp4442\expensetracker\entity\Expense.class
 com\comp4442\expensetracker\controller\HealthController.class
 com\comp4442\expensetracker\ExpensetrackerApplication.class
+com\comp4442\expensetracker\entity\ExpenseType.class
+com\comp4442\expensetracker\entity\ExpenseCategory.class
