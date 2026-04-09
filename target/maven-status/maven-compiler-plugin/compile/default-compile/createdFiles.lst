@@ -1,3 +1,4 @@
+com\comp4442\expensetracker\config\CorsConfig.class
 com\comp4442\expensetracker\exception\GlobalExceptionHandler.class
 com\comp4442\expensetracker\controller\ExpenseController.class
 com\comp4442\expensetracker\entity\ExpenseType.class
@@ -5,11 +6,17 @@ com\comp4442\expensetracker\dto\ApiResponse.class
 com\comp4442\expensetracker\service\ExpenseService.class
 com\comp4442\expensetracker\dto\ErrorResponse.class
 com\comp4442\expensetracker\dto\ExpenseResponse.class
+com\comp4442\expensetracker\service\SummaryServiceImpl.class
+com\comp4442\expensetracker\config\OpenApiConfig.class
+com\comp4442\expensetracker\controller\SummaryController.class
 com\comp4442\expensetracker\dto\UpdateExpenseRequest.class
 com\comp4442\expensetracker\service\ExpenseServiceImpl.class
 com\comp4442\expensetracker\ExpensetrackerApplication.class
+com\comp4442\expensetracker\dto\PagedResponse.class
 com\comp4442\expensetracker\entity\Expense.class
 com\comp4442\expensetracker\repository\ExpenseRepository.class
 com\comp4442\expensetracker\controller\HealthController.class
 com\comp4442\expensetracker\dto\CreateExpenseRequest.class
+com\comp4442\expensetracker\dto\SummaryResponse.class
+com\comp4442\expensetracker\service\SummaryService.class
 com\comp4442\expensetracker\entity\ExpenseCategory.class

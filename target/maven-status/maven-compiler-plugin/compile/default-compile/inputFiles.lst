@@ -1,9 +1,14 @@
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\config\CorsConfig.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\config\OpenApiConfig.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\controller\ExpenseController.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\controller\HealthController.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\controller\SummaryController.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\ApiResponse.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\CreateExpenseRequest.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\ErrorResponse.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\ExpenseResponse.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\PagedResponse.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\SummaryResponse.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\UpdateExpenseRequest.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\entity\Expense.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\entity\ExpenseCategory.java
@@ -13,3 +18,5 @@ C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracke
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\repository\ExpenseRepository.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\service\ExpenseService.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\service\ExpenseServiceImpl.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\service\SummaryService.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\service\SummaryServiceImpl.java

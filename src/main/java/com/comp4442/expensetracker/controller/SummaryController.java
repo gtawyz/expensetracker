@@ -3,12 +3,16 @@ package com.comp4442.expensetracker.controller;
 import com.comp4442.expensetracker.dto.ApiResponse;
 import com.comp4442.expensetracker.dto.SummaryResponse;
 import com.comp4442.expensetracker.service.SummaryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Tag(name = "Summary", description = "Monthly and yearly expense/income statistics")
 @RestController
 @RequestMapping("/api/summary")
 public class SummaryController {
@@ -19,32 +23,41 @@ public class SummaryController {
         this.summaryService = summaryService;
     }
 
-    // GET /api/summary/monthly?year=2026&month=4
+    @Operation(summary = "Get summary for a specific month")
     @GetMapping("/monthly")
     public ResponseEntity<ApiResponse<SummaryResponse>> getMonthlySummary(
-            @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") int year,
-            @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getMonthValue()}") int month) {
+            @Parameter(description = "Year, e.g. 2026")
+            @RequestParam(required = false) Integer year,
+            @Parameter(description = "Month (1-12)")
+            @RequestParam(required = false) Integer month) {
 
-        // Validate month range
-        if (month < 1 || month > 12) {
+        // Default to current year/month if not provided
+        LocalDate now = LocalDate.now();
+        int resolvedYear = (year != null) ? year : now.getYear();
+        int resolvedMonth = (month != null) ? month : now.getMonthValue();
+
+        if (resolvedMonth < 1 || resolvedMonth > 12) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Month must be between 1 and 12"));
         }
 
-        SummaryResponse summary = summaryService.getMonthlySummary(year, month);
+        SummaryResponse summary = summaryService.getMonthlySummary(resolvedYear, resolvedMonth);
         return ResponseEntity.ok(ApiResponse.success(summary));
     }
 
-    // GET /api/summary/yearly?year=2026
+    @Operation(summary = "Get summary for all 12 months in a year")
     @GetMapping("/yearly")
     public ResponseEntity<ApiResponse<List<SummaryResponse>>> getYearlySummary(
-            @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") int year) {
+            @Parameter(description = "Year, e.g. 2026")
+            @RequestParam(required = false) Integer year) {
 
-        List<SummaryResponse> summaries = summaryService.getYearlySummary(year);
+        int resolvedYear = (year != null) ? year : LocalDate.now().getYear();
+
+        List<SummaryResponse> summaries = summaryService.getYearlySummary(resolvedYear);
         return ResponseEntity.ok(ApiResponse.success(summaries));
     }
 
-    // GET /api/summary/monthly/current  (current month shortcut)
+    @Operation(summary = "Get summary for the current month (shortcut)")
     @GetMapping("/monthly/current")
     public ResponseEntity<ApiResponse<SummaryResponse>> getCurrentMonthSummary() {
         LocalDate now = LocalDate.now();
