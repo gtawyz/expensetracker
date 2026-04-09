@@ -1,11 +1,14 @@
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\controller\ExpenseController.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\controller\HealthController.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\ApiResponse.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\CreateExpenseRequest.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\ErrorResponse.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\ExpenseResponse.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\dto\UpdateExpenseRequest.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\entity\Expense.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\entity\ExpenseCategory.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\entity\ExpenseType.java
+C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\exception\GlobalExceptionHandler.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\ExpensetrackerApplication.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\repository\ExpenseRepository.java
 C:\Users\gtawy\Documents\expensetracker\src\main\java\com\comp4442\expensetracker\service\ExpenseService.java
