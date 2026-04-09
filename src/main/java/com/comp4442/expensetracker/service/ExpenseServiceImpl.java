@@ -5,6 +5,8 @@ import com.comp4442.expensetracker.dto.ExpenseResponse;
 import com.comp4442.expensetracker.entity.Expense;
 import com.comp4442.expensetracker.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -38,6 +40,17 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    public ExpenseResponse getExpenseById(Long id) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Expense not found with id: " + id
+                ));
+
+        return mapToResponse(expense);
     }
 
     private ExpenseResponse mapToResponse(Expense expense) {

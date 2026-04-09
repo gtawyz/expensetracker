@@ -31,4 +31,10 @@ public class ExpenseController {
         List<ExpenseResponse> expenses = expenseService.getAllExpenses();
         return ResponseEntity.ok(expenses);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ExpenseResponse> getExpenseById(@PathVariable Long id) {
+        ExpenseResponse expense = expenseService.getExpenseById(id);
+        return ResponseEntity.ok(expense);
+    }
 }
