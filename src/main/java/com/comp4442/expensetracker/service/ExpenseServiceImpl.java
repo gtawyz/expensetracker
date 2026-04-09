@@ -2,11 +2,16 @@ package com.comp4442.expensetracker.service;
 
 import com.comp4442.expensetracker.dto.CreateExpenseRequest;
 import com.comp4442.expensetracker.dto.ExpenseResponse;
+import com.comp4442.expensetracker.dto.PagedResponse;
 import com.comp4442.expensetracker.dto.UpdateExpenseRequest;
 import com.comp4442.expensetracker.entity.Expense;
 import com.comp4442.expensetracker.entity.ExpenseCategory;
 import com.comp4442.expensetracker.entity.ExpenseType;
 import com.comp4442.expensetracker.repository.ExpenseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -90,11 +95,41 @@ public class ExpenseServiceImpl implements ExpenseService {
             ExpenseCategory category,
             LocalDate startDate,
             LocalDate endDate) {
-
         return expenseRepository.findByFilters(type, category, startDate, endDate)
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    public PagedResponse<ExpenseResponse> getExpensesPaged(
+            ExpenseType type,
+            ExpenseCategory category,
+            LocalDate startDate,
+            LocalDate endDate,
+            int page,
+            int size,
+            String sortBy,
+            String sortDir) {
+
+        // Validate sortBy field to prevent injection
+        List<String> allowedSortFields = List.of("transactionDate", "amount", "createdAt", "title");
+        if (!allowedSortFields.contains(sortBy)) {
+            sortBy = "transactionDate";
+        }
+
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Expense> expensePage = expenseRepository.findByFiltersPaged(
+                type, category, startDate, endDate, pageable);
+
+        Page<ExpenseResponse> responsePage = expensePage.map(this::mapToResponse);
+
+        return new PagedResponse<>(responsePage);
     }
 
     private ExpenseResponse mapToResponse(Expense expense) {

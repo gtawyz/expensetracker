@@ -3,6 +3,8 @@ package com.comp4442.expensetracker.repository;
 import com.comp4442.expensetracker.entity.Expense;
 import com.comp4442.expensetracker.entity.ExpenseCategory;
 import com.comp4442.expensetracker.entity.ExpenseType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,7 +41,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             ExpenseType type, ExpenseCategory category,
             LocalDate startDate, LocalDate endDate);
 
-    // Combined dynamic filter using JPQL
+    // Dynamic filter (no pagination)
     @Query("SELECT e FROM Expense e WHERE " +
             "(:type IS NULL OR e.type = :type) AND " +
             "(:category IS NULL OR e.category = :category) AND " +
@@ -51,5 +53,19 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             @Param("category") ExpenseCategory category,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
+    );
+
+    // Dynamic filter WITH pagination and sorting
+    @Query("SELECT e FROM Expense e WHERE " +
+            "(:type IS NULL OR e.type = :type) AND " +
+            "(:category IS NULL OR e.category = :category) AND " +
+            "(:startDate IS NULL OR e.transactionDate >= :startDate) AND " +
+            "(:endDate IS NULL OR e.transactionDate <= :endDate)")
+    Page<Expense> findByFiltersPaged(
+            @Param("type") ExpenseType type,
+            @Param("category") ExpenseCategory category,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            Pageable pageable
     );
 }

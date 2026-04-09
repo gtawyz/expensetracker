@@ -3,6 +3,7 @@ package com.comp4442.expensetracker.controller;
 import com.comp4442.expensetracker.dto.ApiResponse;
 import com.comp4442.expensetracker.dto.CreateExpenseRequest;
 import com.comp4442.expensetracker.dto.ExpenseResponse;
+import com.comp4442.expensetracker.dto.PagedResponse;
 import com.comp4442.expensetracker.dto.UpdateExpenseRequest;
 import com.comp4442.expensetracker.entity.ExpenseCategory;
 import com.comp4442.expensetracker.entity.ExpenseType;
@@ -41,8 +42,8 @@ public class ExpenseController {
         return ResponseEntity.ok(ApiResponse.success(expenses));
     }
 
-    // New: filter endpoint - all params are optional
-    // Example: GET /api/expenses/filter?type=EXPENSE&category=FOOD&startDate=2026-01-01&endDate=2026-04-09
+    // Filter without pagination
+    // Example: GET /api/expenses/filter?type=EXPENSE&category=FOOD
     @GetMapping("/filter")
     public ResponseEntity<ApiResponse<List<ExpenseResponse>>> getExpensesByFilters(
             @RequestParam(required = false) ExpenseType type,
@@ -52,6 +53,25 @@ public class ExpenseController {
 
         List<ExpenseResponse> expenses = expenseService.getExpensesByFilters(type, category, startDate, endDate);
         return ResponseEntity.ok(ApiResponse.success(expenses));
+    }
+
+    // Filter WITH pagination and sorting
+    // Example: GET /api/expenses/paged?page=0&size=10&sortBy=transactionDate&sortDir=desc
+    // Example: GET /api/expenses/paged?type=EXPENSE&category=FOOD&page=0&size=5&sortBy=amount&sortDir=asc
+    @GetMapping("/paged")
+    public ResponseEntity<ApiResponse<PagedResponse<ExpenseResponse>>> getExpensesPaged(
+            @RequestParam(required = false) ExpenseType type,
+            @RequestParam(required = false) ExpenseCategory category,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "transactionDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+
+        PagedResponse<ExpenseResponse> result = expenseService.getExpensesPaged(
+                type, category, startDate, endDate, page, size, sortBy, sortDir);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @GetMapping("/{id}")
