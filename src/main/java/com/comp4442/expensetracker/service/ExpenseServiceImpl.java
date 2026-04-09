@@ -2,11 +2,12 @@ package com.comp4442.expensetracker.service;
 
 import com.comp4442.expensetracker.dto.CreateExpenseRequest;
 import com.comp4442.expensetracker.dto.ExpenseResponse;
+import com.comp4442.expensetracker.dto.UpdateExpenseRequest;
 import com.comp4442.expensetracker.entity.Expense;
 import com.comp4442.expensetracker.repository.ExpenseRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -51,6 +52,26 @@ public class ExpenseServiceImpl implements ExpenseService {
                 ));
 
         return mapToResponse(expense);
+    }
+
+    @Override
+    public ExpenseResponse updateExpense(Long id, UpdateExpenseRequest request) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Expense not found with id: " + id
+                ));
+
+        expense.setTitle(request.getTitle());
+        expense.setDescription(request.getDescription());
+        expense.setAmount(request.getAmount());
+        expense.setType(request.getType());
+        expense.setCategory(request.getCategory());
+        expense.setTransactionDate(request.getTransactionDate());
+
+        Expense updatedExpense = expenseRepository.save(expense);
+
+        return mapToResponse(updatedExpense);
     }
 
     private ExpenseResponse mapToResponse(Expense expense) {
