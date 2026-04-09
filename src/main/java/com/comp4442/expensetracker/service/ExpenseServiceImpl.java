@@ -4,11 +4,14 @@ import com.comp4442.expensetracker.dto.CreateExpenseRequest;
 import com.comp4442.expensetracker.dto.ExpenseResponse;
 import com.comp4442.expensetracker.dto.UpdateExpenseRequest;
 import com.comp4442.expensetracker.entity.Expense;
+import com.comp4442.expensetracker.entity.ExpenseCategory;
+import com.comp4442.expensetracker.entity.ExpenseType;
 import com.comp4442.expensetracker.repository.ExpenseRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -31,7 +34,6 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setTransactionDate(request.getTransactionDate());
 
         Expense savedExpense = expenseRepository.save(expense);
-
         return mapToResponse(savedExpense);
     }
 
@@ -50,7 +52,6 @@ public class ExpenseServiceImpl implements ExpenseService {
                         HttpStatus.NOT_FOUND,
                         "Expense not found with id: " + id
                 ));
-
         return mapToResponse(expense);
     }
 
@@ -70,7 +71,6 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setTransactionDate(request.getTransactionDate());
 
         Expense updatedExpense = expenseRepository.save(expense);
-
         return mapToResponse(updatedExpense);
     }
 
@@ -81,8 +81,20 @@ public class ExpenseServiceImpl implements ExpenseService {
                         HttpStatus.NOT_FOUND,
                         "Expense not found with id: " + id
                 ));
-
         expenseRepository.delete(expense);
+    }
+
+    @Override
+    public List<ExpenseResponse> getExpensesByFilters(
+            ExpenseType type,
+            ExpenseCategory category,
+            LocalDate startDate,
+            LocalDate endDate) {
+
+        return expenseRepository.findByFilters(type, category, startDate, endDate)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     private ExpenseResponse mapToResponse(Expense expense) {
