@@ -74,6 +74,17 @@ public class ExpenseServiceImpl implements ExpenseService {
         return mapToResponse(updatedExpense);
     }
 
+    @Override
+    public void deleteExpense(Long id) {
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Expense not found with id: " + id
+                ));
+
+        expenseRepository.delete(expense);
+    }
+
     private ExpenseResponse mapToResponse(Expense expense) {
         ExpenseResponse response = new ExpenseResponse();
         response.setId(expense.getId());
