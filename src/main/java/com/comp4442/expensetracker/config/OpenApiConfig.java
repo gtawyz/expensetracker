@@ -1,10 +1,8 @@
 package com.comp4442.expensetracker.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,46 +11,34 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
-    @Value("${server.port:8080}")
-    private String serverPort;
-
     @Bean
     public OpenAPI customOpenAPI() {
         Server localServer = new Server();
-        localServer.setUrl("http://localhost:" + serverPort);
-        localServer.setDescription("Local Development");
+        localServer.setUrl("http://localhost:8080");
+        localServer.setDescription("Local Development Server");
 
         Server prodServer = new Server();
-        prodServer.setUrl("http://your-ec2-public-ip:" + serverPort);
-        prodServer.setDescription("AWS EC2 Production");
-
-        Contact contact = new Contact();
-        contact.setName("COMP4442 Group");
-        contact.setEmail("your-email@connect.polyu.edu.hk");
-
-        Info info = new Info()
-                .title("Expense Tracker API")
-                .version("1.0.0")
-                .description("""
-                        A RESTful API for tracking personal income and expenses.
-                        
-                        ## Features
-                        - Create, read, update, delete expenses
-                        - Filter by type, category, and date range
-                        - Pagination and sorting
-                        - Monthly and yearly summary statistics
-                        
-                        ## Expense Types
-                        - `INCOME` - Money received
-                        - `EXPENSE` - Money spent
-                        
-                        ## Categories
-                        FOOD, TRANSPORT, ENTERTAINMENT, SHOPPING, BILLS, HEALTH, EDUCATION, SALARY, INVESTMENT, OTHER
-                        """)
-                .contact(contact);
+        prodServer.setUrl("http://3.107.0.116:8080");
+        prodServer.setDescription("AWS EC2 Production Server");
 
         return new OpenAPI()
-                .info(info)
+                .info(new Info()
+                        .title("Expense Tracker API")
+                        .description("COMP4442 Expense Tracker - Spring Boot REST API for managing personal income and expenses.\n\n"
+                                + "## Features\n"
+                                + "- Create, read, update, delete expenses\n"
+                                + "- Filter by type, category, and date range\n"
+                                + "- Pagination and sorting\n"
+                                + "- Monthly and yearly summary statistics\n\n"
+                                + "## Expense Types\n"
+                                + "- **INCOME** - Money received\n"
+                                + "- **EXPENSE** - Money spent\n\n"
+                                + "## Categories\n"
+                                + "FOOD, TRANSPORT, ENTERTAINMENT, SHOPPING, BILLS, HEALTH, EDUCATION, SALARY, INVESTMENT, OTHER")
+                        .version("1.0.0")
+                        .contact(new io.swagger.v3.oas.models.info.Contact()
+                                .name("COMP4442 Group")
+                                .email("your-email@connect.polyu.hk")))
                 .servers(List.of(localServer, prodServer));
     }
 }
