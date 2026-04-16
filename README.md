@@ -275,6 +275,20 @@ The workflow uses Java 17, enables Maven dependency caching through `actions/set
 
 If any test fails, the workflow fails as well.
 
+## Testing
+
+The project includes unit tests and Spring Boot integration tests.
+
+Integration coverage now includes:
+
+- creating expenses with `POST /api/expenses`
+- listing expenses with `GET /api/expenses`
+- fetching a single expense with `GET /api/expenses/{id}`
+- paginated expense queries with `GET /api/expenses/paged`
+- current-month summary with `GET /api/summary/monthly/current`
+- application health with `GET /api/health`
+- actuator health with `GET /actuator/health`
+
 ## Run With Docker
 
 The Docker setup keeps the normal Maven and JAR workflow unchanged and adds a demo-friendly container stack for the Spring Boot app plus MySQL.
