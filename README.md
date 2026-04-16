@@ -263,6 +263,18 @@ DB_PASSWORD=
 SERVER_PORT=8080
 ```
 
+## CI
+
+GitHub Actions runs a simple CI workflow on every push to `main` and every pull request targeting `main`.
+
+The workflow uses Java 17, enables Maven dependency caching through `actions/setup-java`, makes the Maven wrapper executable, and runs:
+
+```bash
+./mvnw clean test
+```
+
+If any test fails, the workflow fails as well.
+
 ## Run With Docker
 
 The Docker setup keeps the normal Maven and JAR workflow unchanged and adds a demo-friendly container stack for the Spring Boot app plus MySQL.
