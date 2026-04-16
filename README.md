@@ -263,6 +263,65 @@ DB_PASSWORD=
 SERVER_PORT=8080
 ```
 
+## Run With Docker
+
+The Docker setup keeps the normal Maven and JAR workflow unchanged and adds a demo-friendly container stack for the Spring Boot app plus MySQL.
+
+### Prerequisites
+
+- Docker
+- Docker Compose v2
+
+### Build the app image
+
+```bash
+docker build -t expensetracker-app .
+```
+
+### Start the full stack
+
+```bash
+docker compose up --build
+```
+
+This starts:
+
+- the Spring Boot app on `http://localhost:8080`
+- MySQL 8 on `localhost:3306`
+
+The compose setup uses the `docker` Spring profile automatically and passes database settings through environment variables.
+
+### Stop the stack
+
+```bash
+docker compose down
+```
+
+To stop the containers and also remove the MySQL named volume:
+
+```bash
+docker compose down -v
+```
+
+### Verify the Docker demo
+
+After `docker compose up --build`, check:
+
+```bash
+curl http://localhost:8080/actuator/health
+curl http://localhost:8080/actuator/info
+curl http://localhost:8080/api/health
+curl http://localhost:8080/swagger-ui/index.html
+```
+
+You can also inspect container health:
+
+```bash
+docker compose ps
+docker compose logs -f app
+docker compose logs -f mysql
+```
+
 ## AWS Deployment
 
 ### Architecture
