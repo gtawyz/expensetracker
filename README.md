@@ -1,211 +1,476 @@
 # Expense Tracker API
 
-## Project Overview
+A Spring Boot service computing application for managing personal income and expense records.  
+This project provides RESTful APIs for transaction management, filtering, pagination, summary generation, CSV export, health monitoring, automated testing, Docker-based execution, and AWS EC2 deployment.
 
-This repository contains a COMP4442 semester project implemented as a Spring Boot REST API for managing personal income and expense records. The project focuses on clean CRUD operations, filtering, pagination, summary reporting, health monitoring, containerized execution, and a straightforward AWS deployment path.
+---
 
-## System Architecture
+## 1. Project Overview
+
+This project was developed for **COMP4442 Service and Cloud Computing**.  
+It focuses on the backend service layer rather than a large frontend interface. The system is designed to manage financial records through a clean REST API and to demonstrate practical service deployment on both local and cloud environments.
+
+The application supports:
+
+- Creating, reading, updating, and deleting income and expense records
+- Filtering records by type, category, and date
+- Pagination and sorting for scalable queries
+- Monthly and yearly summary generation
+- CSV export
+- Health monitoring with both custom endpoints and Spring Boot Actuator
+- Docker Compose deployment
+- AWS EC2 deployment
+- Automated testing with GitHub Actions
+
+---
+
+## 2. System Architecture
 
 ```text
-Client -> EC2/Docker -> Spring Boot -> MySQL/RDS
+Client Browser / Swagger UI
+        |
+        v
+Spring Boot REST API
+(Controllers)
+        |
+        v
+Service Layer
+        |
+        v
+Spring Data JPA Repository
+        |
+        v
+MySQL Database
 ```
 
-- Clients access the API over HTTP.
-- The application can run locally, inside Docker, or on AWS EC2.
-- Spring Boot handles business logic, validation, persistence, and monitoring endpoints.
-- Data is stored in MySQL locally or in Amazon RDS for deployment.
+For deployment, the application uses a two-container Docker Compose setup:
 
-## Tech Stack
+- **expensetracker-app**: Spring Boot backend
+- **expensetracker-mysql**: MySQL 8.4 database
+
+This makes local testing and EC2 deployment consistent.
+
+---
+
+## 3. Tech Stack
 
 | Technology | Version | Purpose |
-|---|---|---|
-| Java | 17 | Programming language |
+|---|---:|---|
+| Java | 17 | Core programming language |
 | Spring Boot | 3.5.13 | REST API framework |
-| Spring Data JPA | - | Data access layer |
-| MySQL | 8.4 | Primary database |
-| H2 | - | In-memory test database |
+| Spring Data JPA | - | Persistence layer |
+| MySQL | 8.4 | Primary relational database |
+| H2 | - | In-memory database for tests |
 | Maven | - | Build and dependency management |
-| Docker Compose | v2 | Local container orchestration |
-| AWS EC2 | - | Application hosting |
-| AWS RDS | MySQL 8.4 | Managed production database |
-| Spring Boot Actuator | - | Operational monitoring |
-| springdoc OpenAPI | 2.8.6 | Swagger UI documentation |
+| springdoc-openapi | 2.8.6 | Swagger UI / OpenAPI documentation |
+| Spring Boot Actuator | - | Monitoring and health endpoints |
+| Docker Compose | v2 | Container orchestration |
 | GitHub Actions | - | Continuous integration |
+| AWS EC2 | - | Cloud deployment environment |
 
-## Key Features
+---
 
-- CRUD operations for expense and income records
-- Filtering by type, category, and date range
-- Pagination and sorting for expense queries
-- Monthly and yearly summary statistics
-- CSV export for stored records
-- Custom health endpoints for quick service checks
-- Spring Boot Actuator endpoints for operational monitoring
-- Multiple runtime profiles for local, Docker, and production environments
+## 4. Key Features
 
-## API Overview
+### 4.1 Expense and Income Management
+The system stores both expenses and incomes using a unified `Expense` entity with a transaction type field.
 
-Main endpoint groups:
+### 4.2 Filtering, Pagination, and Sorting
+Users can retrieve only the records they need by applying:
+- type filtering
+- category filtering
+- date range filtering
+- pagination
+- sorting
 
-- `POST /api/expenses`, `GET /api/expenses`, `GET /api/expenses/{id}`, `PUT /api/expenses/{id}`, `DELETE /api/expenses/{id}`
+### 4.3 Monthly and Yearly Summaries
+The service can generate:
+- current monthly summary
+- summary for a specific month
+- yearly summary across all months
+
+### 4.4 CSV Export
+Stored records can be exported in CSV format for reporting and further analysis.
+
+### 4.5 Health and Monitoring
+The project provides:
+- custom health endpoints
+- Spring Boot Actuator monitoring endpoints
+
+### 4.6 Automated Testing and CI
+Unit tests and integration tests are included, and GitHub Actions runs the test suite automatically.
+
+---
+
+## 5. Data Model
+
+The core entity is `Expense`.
+
+### Main fields
+- `id`
+- `title`
+- `description`
+- `amount`
+- `type`
+- `category`
+- `transactionDate`
+- `createdAt`
+
+### Transaction types
+- `INCOME`
+- `EXPENSE`
+
+### Categories
+- `FOOD`
+- `TRANSPORT`
+- `ENTERTAINMENT`
+- `SHOPPING`
+- `BILLS`
+- `HEALTH`
+- `EDUCATION`
+- `SALARY`
+- `INVESTMENT`
+- `OTHER`
+
+---
+
+## 6. API Overview
+
+### 6.1 Expense API
+- `POST /api/expenses`
+- `GET /api/expenses`
+- `GET /api/expenses/{id}`
+- `PUT /api/expenses/{id}`
+- `DELETE /api/expenses/{id}`
 - `GET /api/expenses/filter`
 - `GET /api/expenses/paged`
-- `GET /api/summary/monthly`, `GET /api/summary/monthly/current`, `GET /api/summary/yearly`
+
+### 6.2 Summary API
+- `GET /api/summary/monthly/current`
+- `GET /api/summary/monthly`
+- `GET /api/summary/yearly`
+
+### 6.3 Export API
 - `GET /api/export/csv`
-- `GET /api/health`, `GET /api/health/detail`
-- `GET /actuator/health`, `GET /actuator/info`, `GET /actuator/metrics`
 
-Sample `curl` commands:
+### 6.4 Health and Monitoring
+- `GET /api/health`
+- `GET /api/health/detail`
+- `GET /actuator/health`
+- `GET /actuator/info`
+- `GET /actuator/metrics`
 
-```bash
-curl -X POST http://localhost:8080/api/expenses \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Lunch","description":"Team lunch","amount":50.00,"type":"EXPENSE","category":"FOOD","transactionDate":"2026-04-09"}'
+---
 
-curl http://localhost:8080/api/expenses
+## 7. Example Request Bodies
 
-curl http://localhost:8080/api/expenses/1
-
-curl "http://localhost:8080/api/expenses/paged?page=0&size=5&sortBy=amount&sortDir=desc"
-
-curl http://localhost:8080/api/summary/monthly/current
-
-curl http://localhost:8080/api/health
-
-curl http://localhost:8080/actuator/health
-
-curl -OJ http://localhost:8080/api/export/csv
+### Create an expense
+```json
+{
+  "title": "Lunch",
+  "description": "Lunch at campus canteen",
+  "amount": 55.5,
+  "type": "EXPENSE",
+  "category": "FOOD",
+  "transactionDate": "2026-04-16"
+}
 ```
 
-Swagger UI is available at `http://localhost:8080/swagger-ui/index.html` when the application is running.
+### Create an income
+```json
+{
+  "title": "Part-time salary",
+  "description": "April part-time job payment",
+  "amount": 8000,
+  "type": "INCOME",
+  "category": "SALARY",
+  "transactionDate": "2026-04-15"
+}
+```
 
-## Profiles and Configuration
+---
 
-The project uses three Spring profiles:
+## 8. Profiles and Configuration
 
-- `dev`: default local profile, typically using MySQL on `localhost`
-- `docker`: container profile, using the Docker service name `mysql`
-- `prod`: deployment profile for environments such as AWS EC2 with RDS
+The project uses profile-based configuration.
 
-Common environment variables:
+### Profiles
+- `dev` - local development
+- `docker` - Docker Compose deployment
+- `prod` - production-style externalized configuration
 
+### Configuration files
+- `application.properties`
+- `application-dev.properties`
+- `application-docker.properties`
+- `application-prod.properties`
+
+### Environment variables
+The following variables are used for database and server configuration:
+
+- `DB_HOST`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `SERVER_PORT`
+
+### Example `.env`
 ```env
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=expense_tracker
 DB_USERNAME=root
-DB_PASSWORD=
+DB_PASSWORD=your_password
 SERVER_PORT=8080
 ```
 
-## Local Run
+---
 
-Prerequisites:
+## 9. Local Run
 
-- Java 17
-- MySQL 8.x
-
-Steps:
-
-```bash
-cd expensetracker
-```
-
-If you are starting from a fresh checkout, clone the repository first and then enter the project directory.
-
-Create the database:
-
-```sql
-CREATE DATABASE expense_tracker;
-```
-
-Run the application:
-
-```bash
-./mvnw spring-boot:run
-```
-
-The default `dev` profile starts the API on `http://localhost:8080`.
-
-## Docker Run
-
-The Docker setup runs the Spring Boot app and MySQL together. The app is published on `8080`, while MySQL stays available to the app through the internal Docker network using the hostname `mysql`.
-
-Start the stack:
+### Option A: Recommended - Docker Compose
+This is the most stable way to run the project locally.
 
 ```bash
 docker compose up --build
 ```
 
-Stop the stack:
-
+To stop:
 ```bash
 docker compose down
 ```
 
-Remove containers and the MySQL volume:
-
+To stop and remove volumes:
 ```bash
 docker compose down -v
 ```
 
-## AWS Deployment Summary
-
-For deployment, the application is packaged as a Spring Boot JAR and runs on AWS EC2, while MySQL is hosted on Amazon RDS.
-
-Typical deployment flow:
-
-1. Provision an EC2 instance with Java 17 installed.
-2. Provision an RDS MySQL database and create the `expense_tracker` schema.
-3. Set `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD`, and `SERVER_PORT`.
-4. Build the project with Maven and start the JAR using the `prod` profile.
-
-Example commands:
-
-```bash
-chmod +x mvnw
-./mvnw clean package -DskipTests
-java -jar -Dspring.profiles.active=prod target/expensetracker-0.0.1-SNAPSHOT.jar
+### Local verification
+Open in browser:
+```text
+http://localhost:8080/swagger-ui/index.html
+http://localhost:8080/actuator/health
+http://localhost:8080/api/health
 ```
 
-## Testing
+### Option B: Run with Maven
+If you want to run without Docker, make sure your local MySQL is available and your database environment variables are set correctly.
 
-The project includes both unit tests and Spring Boot integration tests.
+Example:
 
-- Unit tests cover service-layer behavior.
-- Integration tests use `MockMvc` with an isolated H2 in-memory database.
-- Covered integration endpoints include `POST /api/expenses`, `GET /api/expenses`, `GET /api/expenses/{id}`, `GET /api/expenses/paged`, `GET /api/summary/monthly/current`, `GET /api/health`, and `GET /actuator/health`.
-
-Run all tests with:
-
-```bash
-./mvnw test
+#### Windows PowerShell
+```powershell
+$env:DB_HOST="localhost"
+$env:DB_PORT="3306"
+$env:DB_NAME="expense_tracker"
+$env:DB_USERNAME="root"
+$env:DB_PASSWORD="your_password"
+$env:SERVER_PORT="8080"
+./mvnw spring-boot:run
 ```
 
-## CI
-
-GitHub Actions runs a simple CI workflow for:
-
-- pushes to `main`
-- pull requests targeting `main`
-
-The workflow uses Java 17, enables Maven dependency caching, and runs:
-
+#### macOS / Linux
 ```bash
-chmod +x mvnw
+export DB_HOST=localhost
+export DB_PORT=3306
+export DB_NAME=expense_tracker
+export DB_USERNAME=root
+export DB_PASSWORD=your_password
+export SERVER_PORT=8080
+./mvnw spring-boot:run
+```
+
+---
+
+## 10. Docker Run
+
+### Build and start in detached mode
+```bash
+docker compose up --build -d
+```
+
+### Check container status
+```bash
+docker compose ps
+```
+
+### View logs
+```bash
+docker compose logs --tail=100
+```
+
+### View app logs only
+```bash
+docker compose logs --tail=100 expensetracker-app
+```
+
+### View MySQL logs only
+```bash
+docker compose logs --tail=100 expensetracker-mysql
+```
+
+---
+
+## 11. AWS EC2 Deployment Summary
+
+The final cloud deployment uses **AWS EC2 + Docker Compose**.
+
+### Deployment steps
+1. Launch an Amazon Linux EC2 instance
+2. Open:
+   - port `22` for SSH
+   - port `8080` for the web API
+3. Install Docker
+4. Install Docker Compose and Buildx
+5. Clone the repository
+6. Run:
+   ```bash
+   docker compose up --build -d
+   ```
+7. Verify deployment through the public EC2 address
+
+### Useful EC2 commands
+```bash
+docker compose ps
+docker compose logs --tail=100
+curl http://localhost:8080/actuator/health
+curl http://localhost:8080/api/health
+```
+
+### Public verification
+```text
+http://<EC2_PUBLIC_IP>:8080/swagger-ui/index.html
+http://<EC2_PUBLIC_IP>:8080/actuator/health
+http://<EC2_PUBLIC_IP>:8080/api/health
+```
+
+---
+
+## 12. Testing
+
+### Run all tests
+```bash
 ./mvnw clean test
 ```
 
-If any test fails, the CI workflow fails.
+### Test coverage includes
+- service-layer unit tests
+- integration tests with MockMvc
+- H2 in-memory database for isolated test execution
 
-## Demo Checklist
+### Representative tested endpoints
+- `POST /api/expenses`
+- `GET /api/expenses`
+- `GET /api/expenses/{id}`
+- `GET /api/expenses/paged`
+- `GET /api/summary/monthly/current`
+- `GET /api/health`
+- `GET /actuator/health`
 
-- Start the application locally or with Docker
-- Verify `GET /api/health`
-- Verify `GET /actuator/health`
-- Create a record with `POST /api/expenses`
-- List records with `GET /api/expenses`
-- Show pagination with `GET /api/expenses/paged`
-- Show current-month summary with `GET /api/summary/monthly/current`
-- Export records with `GET /api/export/csv`
-- Open Swagger UI at `http://localhost:8080/swagger-ui/index.html`
+---
+
+## 13. CI
+
+The project includes a GitHub Actions workflow for continuous integration.
+
+### Workflow behavior
+- triggered on push to `main`
+- triggered on pull request to `main`
+- uses Java 17
+- runs:
+  ```bash
+  ./mvnw clean test
+  ```
+
+---
+
+## 14. Demo Checklist
+
+Before the live demo, confirm the following:
+
+### Local / Docker
+- Docker Desktop is running
+- `docker compose up --build` succeeds
+- `docker compose ps` shows both containers are up
+- Swagger UI opens successfully
+- `/actuator/health` returns `UP`
+- `/api/health` returns a normal JSON response
+
+### Cloud / EC2
+- EC2 instance is running
+- port `8080` is open
+- Docker containers are up
+- public URL is reachable
+- Swagger UI and health endpoints work from an external browser
+
+---
+
+## 15. Sample Demo Flow
+
+A stable demo sequence is:
+
+1. Open `/actuator/health`
+2. Open `/api/health`
+3. Open Swagger UI
+4. Create an expense
+5. Create an income
+6. Retrieve all records
+7. Show paged query
+8. Show monthly summary
+9. Show CSV export
+10. Mention Docker and AWS EC2 deployment
+
+---
+
+## 16. Project Structure
+
+```text
+expensetracker/
+├── .github/
+│   └── workflows/
+├── .mvn/
+├── src/
+│   ├── main/
+│   │   ├── java/com/comp4442/expensetracker/
+│   │   │   ├── config/
+│   │   │   ├── controller/
+│   │   │   ├── dto/
+│   │   │   ├── entity/
+│   │   │   ├── exception/
+│   │   │   ├── repository/
+│   │   │   ├── service/
+│   │   │   └── ExpensetrackerApplication.java
+│   │   └── resources/
+│   └── test/
+├── Dockerfile
+├── compose.yaml
+├── pom.xml
+├── mvnw
+├── mvnw.cmd
+└── README.md
+```
+
+---
+
+## 17. Limitations
+
+The current version is intended as a backend service prototype for coursework demonstration.
+
+Not included in the current scope:
+- authentication / login
+- user-specific account isolation
+- budget reminders
+- graphical dashboard
+- multi-user support
+
+The Docker demo also uses a simple MySQL root account configuration, which is acceptable for coursework demonstration but not ideal for hardened production deployment.
+
+---
+
+## 18. Conclusion
+
+This project demonstrates a complete Spring Boot service computing application with clean layering, practical deployment, and verifiable API behavior.  
+It supports CRUD operations, filtering, pagination, monthly and yearly summaries, CSV export, health monitoring, automated testing, Docker-based execution, and AWS EC2 deployment.
+
+The final result is not only a working local backend, but also a cloud-deployable service that can be demonstrated reliably through Swagger UI and monitoring endpoints.
