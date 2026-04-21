@@ -5,7 +5,7 @@ This project provides RESTful APIs for transaction management, filtering, pagina
 
 --
 
-## 1. Project Overview
+# 1. Project Overview
 
 This project was developed for **COMP4442 Service and Cloud Computing**.  
 It focuses on the backend service layer rather than a large frontend interface. The system is designed to manage financial records through a clean REST API and to demonstrate practical service deployment on both local and cloud environments.
