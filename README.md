@@ -421,7 +421,7 @@ A stable demo sequence is:
 9. Show CSV export
 10. Mention Docker and AWS EC2 deployment
 
----
+--
 
 ## 16. Project Structure
 
