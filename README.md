@@ -466,7 +466,7 @@ Not included in the current scope:
 
 The Docker demo also uses a simple MySQL root account configuration, which is acceptable for coursework demonstration but not ideal for hardened production deployment.
 
---
+-
 
 ## 18. Conclusion
 
