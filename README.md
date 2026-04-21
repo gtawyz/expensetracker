@@ -30,7 +30,7 @@ The application supports:
 Client Browser / Swagger UI
         |
         v
-Spring Boot REST API
+Spring Boot REST APIl
 (Controllers)
         |
         v
