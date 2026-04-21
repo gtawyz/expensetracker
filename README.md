@@ -3,7 +3,7 @@
 A Spring Boot service computing application for managing personal income and expense records.  
 This project provides RESTful APIs for transaction management, filtering, pagination, summary generation, CSV export, health monitoring, automated testing, Docker-based execution, and AWS EC2 deployment.
 
----
+--
 
 ## 1. Project Overview
 
