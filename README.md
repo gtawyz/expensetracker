@@ -225,7 +225,7 @@ DB_PASSWORD=your_password
 SERVER_PORT=8080
 ```
 
----
+--
 
 ## 9. Local Run
 
