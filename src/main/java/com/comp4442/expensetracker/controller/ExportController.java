@@ -22,6 +22,7 @@ public class ExportController {
     @Autowired
     private ExportService exportService;
 
+    // Generates a CSV file from all expense records and sends it as a download response.
     @GetMapping("/csv")
     @Operation(summary = "Export all expenses to CSV", description = "Downloads all expense records as a CSV file")
     public ResponseEntity<byte[]> exportCsv() {

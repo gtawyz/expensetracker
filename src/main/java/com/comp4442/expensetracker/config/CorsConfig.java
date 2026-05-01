@@ -11,6 +11,7 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
+    // Builds the CORS filter that allows the API to receive browser requests from configured origins.
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();

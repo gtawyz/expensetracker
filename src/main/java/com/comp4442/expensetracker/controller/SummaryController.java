@@ -19,10 +19,12 @@ public class SummaryController {
 
     private final SummaryService summaryService;
 
+    // Injects the service that calculates monthly and yearly summary totals.
     public SummaryController(SummaryService summaryService) {
         this.summaryService = summaryService;
     }
 
+    // Returns totals for a selected month, defaulting to the current month when values are missing.
     @Operation(summary = "Get summary for a specific month")
     @GetMapping("/monthly")
     public ResponseEntity<ApiResponse<SummaryResponse>> getMonthlySummary(
@@ -45,6 +47,7 @@ public class SummaryController {
         return ResponseEntity.ok(ApiResponse.success(summary));
     }
 
+    // Returns one summary object for each month in the selected year.
     @Operation(summary = "Get summary for all 12 months in a year")
     @GetMapping("/yearly")
     public ResponseEntity<ApiResponse<List<SummaryResponse>>> getYearlySummary(
@@ -57,6 +60,7 @@ public class SummaryController {
         return ResponseEntity.ok(ApiResponse.success(summaries));
     }
 
+    // Shortcut endpoint that calculates the summary for the current calendar month.
     @Operation(summary = "Get summary for the current month (shortcut)")
     @GetMapping("/monthly/current")
     public ResponseEntity<ApiResponse<SummaryResponse>> getCurrentMonthSummary() {

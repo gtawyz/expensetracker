@@ -19,10 +19,12 @@ public class SummaryServiceImpl implements SummaryService {
 
     private final ExpenseRepository expenseRepository;
 
+    // Injects the repository used to load records for summary calculations.
     public SummaryServiceImpl(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
     }
 
+    // Loads records inside one month and calculates totals, net amount, and category breakdowns.
     @Override
     public SummaryResponse getMonthlySummary(int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -33,6 +35,7 @@ public class SummaryServiceImpl implements SummaryService {
         return buildSummary(year, month, expenses);
     }
 
+    // Loads records for the full year and builds a separate summary for each month.
     @Override
     public List<SummaryResponse> getYearlySummary(int year) {
         LocalDate startDate = LocalDate.of(year, 1, 1);
@@ -52,6 +55,7 @@ public class SummaryServiceImpl implements SummaryService {
         return summaries;
     }
 
+    // Calculates income, expenses, net amount, and per-category totals from the provided records.
     private SummaryResponse buildSummary(int year, int month, List<Expense> expenses) {
         BigDecimal totalIncome = expenses.stream()
                 .filter(e -> e.getType() == ExpenseType.INCOME)

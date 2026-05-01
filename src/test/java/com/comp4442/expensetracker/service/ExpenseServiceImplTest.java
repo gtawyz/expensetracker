@@ -43,6 +43,7 @@ class ExpenseServiceImplTest {
     private CreateExpenseRequest createRequest;
     private UpdateExpenseRequest updateRequest;
 
+    // Prepares reusable sample records and request DTOs for each service test.
     @BeforeEach
     void setUp() {
         // Sample expense entity
@@ -86,6 +87,7 @@ class ExpenseServiceImplTest {
         updateRequest.setTransactionDate(LocalDate.of(2026, 4, 9));
     }
 
+    // Checks that creating a record saves an entity and returns the expected response data.
     @Test
     @DisplayName("Should create expense successfully")
     void createExpense_Success() {
@@ -101,6 +103,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, times(1)).save(any(Expense.class));
     }
 
+    // Checks that all stored records are returned and mapped into response DTOs.
     @Test
     @DisplayName("Should get all expenses")
     void getAllExpenses_Success() {
@@ -115,6 +118,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, times(1)).findAll();
     }
 
+    // Checks that an empty repository produces an empty response list.
     @Test
     @DisplayName("Should return empty list when no expenses exist")
     void getAllExpenses_EmptyList() {
@@ -127,6 +131,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, times(1)).findAll();
     }
 
+    // Checks that an existing ID returns the matching record.
     @Test
     @DisplayName("Should get expense by ID")
     void getExpenseById_Success() {
@@ -141,6 +146,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, times(1)).findById(1L);
     }
 
+    // Checks that a missing ID raises the service's not-found exception.
     @Test
     @DisplayName("Should throw exception when expense not found by ID")
     void getExpenseById_NotFound() {
@@ -152,6 +158,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, times(1)).findById(999L);
     }
 
+    // Checks that updating a record looks it up, saves the changed entity, and returns a response.
     @Test
     @DisplayName("Should update expense successfully")
     void updateExpense_Success() {
@@ -165,6 +172,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, times(1)).save(any(Expense.class));
     }
 
+    // Checks that updating a missing record fails before anything is saved.
     @Test
     @DisplayName("Should throw exception when updating non-existent expense")
     void updateExpense_NotFound() {
@@ -177,6 +185,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, never()).save(any(Expense.class));
     }
 
+    // Checks that deleting an existing record removes the exact entity loaded from the repository.
     @Test
     @DisplayName("Should delete expense successfully")
     void deleteExpense_Success() {
@@ -189,6 +198,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, times(1)).delete(sampleExpense);
     }
 
+    // Checks that deleting a missing record fails before any delete call is made.
     @Test
     @DisplayName("Should throw exception when deleting non-existent expense")
     void deleteExpense_NotFound() {
@@ -201,6 +211,7 @@ class ExpenseServiceImplTest {
         verify(expenseRepository, never()).delete(any(Expense.class));
     }
 
+    // Checks that filtering by expense type only returns records with that type.
     @Test
     @DisplayName("Should filter expenses by type")
     void getExpensesByFilters_ByType() {
@@ -216,6 +227,7 @@ class ExpenseServiceImplTest {
         assertEquals(ExpenseType.EXPENSE, result.get(0).getType());
     }
 
+    // Checks that filtering by category only returns records with that category.
     @Test
     @DisplayName("Should filter expenses by category")
     void getExpensesByFilters_ByCategory() {
@@ -231,6 +243,7 @@ class ExpenseServiceImplTest {
         assertEquals(ExpenseCategory.FOOD, result.get(0).getCategory());
     }
 
+    // Checks that filters with no matching records return an empty list.
     @Test
     @DisplayName("Should return empty list when no matching filters")
     void getExpensesByFilters_NoMatch() {

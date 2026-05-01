@@ -24,10 +24,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
 
+    // Injects the repository used to read and write expense records in the database.
     public ExpenseServiceImpl(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
     }
 
+    // Copies request data into a new entity, saves it, and returns it as an API response DTO.
     @Override
     public ExpenseResponse createExpense(CreateExpenseRequest request) {
         Expense expense = new Expense();
@@ -42,6 +44,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         return mapToResponse(savedExpense);
     }
 
+    // Reads all database records and converts each entity into an API response DTO.
     @Override
     public List<ExpenseResponse> getAllExpenses() {
         return expenseRepository.findAll()
@@ -50,6 +53,7 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .toList();
     }
 
+    // Finds a record by ID or throws a 404 error when the ID does not exist.
     @Override
     public ExpenseResponse getExpenseById(Long id) {
         Expense expense = expenseRepository.findById(id)
@@ -60,6 +64,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         return mapToResponse(expense);
     }
 
+    // Finds an existing record, replaces its editable values, saves it, and returns the updated DTO.
     @Override
     public ExpenseResponse updateExpense(Long id, UpdateExpenseRequest request) {
         Expense expense = expenseRepository.findById(id)
@@ -79,6 +84,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         return mapToResponse(updatedExpense);
     }
 
+    // Finds an existing record and removes it from the database.
     @Override
     public void deleteExpense(Long id) {
         Expense expense = expenseRepository.findById(id)
@@ -89,6 +95,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         expenseRepository.delete(expense);
     }
 
+    // Runs the repository's dynamic filter query and converts matching entities to response DTOs.
     @Override
     public List<ExpenseResponse> getExpensesByFilters(
             ExpenseType type,
@@ -101,6 +108,7 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .toList();
     }
 
+    // Applies safe sorting and pagination to the dynamic filter query, then wraps page metadata for the API.
     @Override
     public PagedResponse<ExpenseResponse> getExpensesPaged(
             ExpenseType type,
@@ -132,6 +140,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         return new PagedResponse<>(responsePage);
     }
 
+    // Converts the database entity shape into the response object shape exposed by the API.
     private ExpenseResponse mapToResponse(Expense expense) {
         ExpenseResponse response = new ExpenseResponse();
         response.setId(expense.getId());

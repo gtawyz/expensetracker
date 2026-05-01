@@ -27,10 +27,12 @@ public class ExpenseController {
 
     private final ExpenseService expenseService;
 
+    // Injects the service that contains the business logic for expenses.
     public ExpenseController(ExpenseService expenseService) {
         this.expenseService = expenseService;
     }
 
+    // Receives a request body, creates one expense or income record, and returns the saved data.
     @Operation(summary = "Create a new expense or income record")
     @PostMapping
     public ResponseEntity<ApiResponse<ExpenseResponse>> createExpense(
@@ -41,6 +43,7 @@ public class ExpenseController {
                 .body(ApiResponse.success("Expense created successfully", created));
     }
 
+    // Returns every saved expense or income record without applying filters.
     @Operation(summary = "Get all expenses without filtering")
     @GetMapping
     public ResponseEntity<ApiResponse<List<ExpenseResponse>>> getAllExpenses() {
@@ -48,6 +51,7 @@ public class ExpenseController {
         return ResponseEntity.ok(ApiResponse.success(expenses));
     }
 
+    // Applies optional type, category, and date filters before returning matching records.
     @Operation(summary = "Filter expenses by type, category, and/or date range")
     @GetMapping("/filter")
     public ResponseEntity<ApiResponse<List<ExpenseResponse>>> getExpensesByFilters(
@@ -60,6 +64,7 @@ public class ExpenseController {
         return ResponseEntity.ok(ApiResponse.success(expenses));
     }
 
+    // Returns filtered records in pages, with safe sorting based on the requested field and direction.
     @Operation(summary = "Get expenses with pagination and sorting (supports all filter params too)")
     @GetMapping("/paged")
     public ResponseEntity<ApiResponse<PagedResponse<ExpenseResponse>>> getExpensesPaged(
@@ -77,6 +82,7 @@ public class ExpenseController {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
+    // Looks up one record by its database ID and returns it if it exists.
     @Operation(summary = "Get a single expense by ID")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ExpenseResponse>> getExpenseById(
@@ -85,6 +91,7 @@ public class ExpenseController {
         return ResponseEntity.ok(ApiResponse.success(expense));
     }
 
+    // Replaces the editable fields of an existing record and returns the updated version.
     @Operation(summary = "Update an existing expense by ID")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ExpenseResponse>> updateExpense(
@@ -94,6 +101,7 @@ public class ExpenseController {
         return ResponseEntity.ok(ApiResponse.success("Expense updated successfully", updated));
     }
 
+    // Deletes one record by ID and returns a success response when the delete finishes.
     @Operation(summary = "Delete an expense by ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteExpense(

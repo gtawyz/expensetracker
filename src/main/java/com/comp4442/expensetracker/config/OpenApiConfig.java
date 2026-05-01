@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
+    // Creates the Swagger/OpenAPI metadata shown in the generated API documentation.
     @Bean
     public OpenAPI customOpenAPI() {
         Contact contact = new Contact();

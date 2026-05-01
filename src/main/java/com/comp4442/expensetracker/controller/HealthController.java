@@ -22,6 +22,7 @@ public class HealthController {
     @Autowired
     private DataSource dataSource;
 
+    // Returns a small health payload showing that the API process is running.
     @GetMapping("/health")
     @Operation(summary = "Basic health check", description = "Returns basic service status")
     public ResponseEntity<Map<String, Object>> healthCheck() {
@@ -32,6 +33,7 @@ public class HealthController {
         return ResponseEntity.ok(health);
     }
 
+    // Checks database connectivity and JVM/system details to describe the service health more fully.
     @GetMapping("/health/detail")
     @Operation(summary = "Detailed health check", description = "Returns detailed system status including database connection and system info")
     public ResponseEntity<Map<String, Object>> detailedHealthCheck() {

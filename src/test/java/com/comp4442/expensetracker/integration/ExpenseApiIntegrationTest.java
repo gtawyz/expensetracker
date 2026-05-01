@@ -41,11 +41,13 @@ class ExpenseApiIntegrationTest {
     @Autowired
     private ExpenseRepository expenseRepository;
 
+    // Clears database records before each integration test so tests do not affect each other.
     @BeforeEach
     void clearDatabase() {
         expenseRepository.deleteAll();
     }
 
+    // Verifies that the create-expense endpoint stores data and returns the created record.
     @Test
     @DisplayName("POST /api/expenses creates a new expense")
     void createExpense_ReturnsCreatedExpense() throws Exception {
@@ -71,6 +73,7 @@ class ExpenseApiIntegrationTest {
                 .andExpect(jsonPath("$.data.category").value("FOOD"));
     }
 
+    // Verifies that the list endpoint returns all records saved in the test database.
     @Test
     @DisplayName("GET /api/expenses returns all saved expenses")
     void getAllExpenses_ReturnsSavedRecords() throws Exception {
@@ -85,6 +88,7 @@ class ExpenseApiIntegrationTest {
                 .andExpect(jsonPath("$.data[*].title", hasItem("Salary")));
     }
 
+    // Verifies that the get-by-ID endpoint returns the exact saved record.
     @Test
     @DisplayName("GET /api/expenses/{id} returns one expense")
     void getExpenseById_ReturnsMatchingRecord() throws Exception {
@@ -104,6 +108,7 @@ class ExpenseApiIntegrationTest {
                 .andExpect(jsonPath("$.data.category").value("TRANSPORT"));
     }
 
+    // Verifies that the paged endpoint returns sorted content plus page metadata.
     @Test
     @DisplayName("GET /api/expenses/paged returns paginated data")
     void getExpensesPaged_ReturnsPageMetadataAndContent() throws Exception {
@@ -126,6 +131,7 @@ class ExpenseApiIntegrationTest {
                 .andExpect(jsonPath("$.data.content[0].title").value("Book"));
     }
 
+    // Verifies that the current-month summary endpoint calculates income, expenses, net amount, and category totals.
     @Test
     @DisplayName("GET /api/summary/monthly/current returns current-month totals")
     void getCurrentMonthSummary_ReturnsCalculatedTotals() throws Exception {
@@ -145,6 +151,7 @@ class ExpenseApiIntegrationTest {
                 .andExpect(jsonPath("$.data.incomeByCategory.SALARY").value(5000.00));
     }
 
+    // Verifies that the custom API health endpoint reports the service as running.
     @Test
     @DisplayName("GET /api/health returns application health details")
     void getApiHealth_ReturnsUpStatus() throws Exception {
@@ -155,6 +162,7 @@ class ExpenseApiIntegrationTest {
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
 
+    // Verifies that Spring Boot Actuator reports the application health as UP.
     @Test
     @DisplayName("GET /actuator/health returns actuator health status")
     void getActuatorHealth_ReturnsUpStatus() throws Exception {
@@ -163,6 +171,7 @@ class ExpenseApiIntegrationTest {
                 .andExpect(jsonPath("$.status").value("UP"));
     }
 
+    // Creates and saves a test expense record with the supplied values.
     private Expense saveExpense(
             String title,
             String amount,

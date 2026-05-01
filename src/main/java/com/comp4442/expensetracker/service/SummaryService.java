@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface SummaryService {
 
-    // Summary for a specific month
+    // Defines the service operation that calculates totals for one specific month.
     SummaryResponse getMonthlySummary(int year, int month);
 
-    // Summary for all months in a specific year
+    // Defines the service operation that calculates totals for every month in one year.
     List<SummaryResponse> getYearlySummary(int year);
 }

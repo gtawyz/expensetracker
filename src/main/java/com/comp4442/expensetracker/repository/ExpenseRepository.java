@@ -16,32 +16,32 @@ import java.util.List;
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
-    // Filter by type
+    // Lets Spring Data generate a query that returns records with the selected income/expense type.
     List<Expense> findByType(ExpenseType type);
 
-    // Filter by category
+    // Lets Spring Data generate a query that returns records in the selected category.
     List<Expense> findByCategory(ExpenseCategory category);
 
-    // Filter by date range
+    // Lets Spring Data generate a query that returns records whose transaction date is inside a range.
     List<Expense> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate);
 
-    // Filter by type and category
+    // Lets Spring Data generate a query that returns records matching both type and category.
     List<Expense> findByTypeAndCategory(ExpenseType type, ExpenseCategory category);
 
-    // Filter by type and date range
+    // Lets Spring Data generate a query that returns records matching type and transaction date range.
     List<Expense> findByTypeAndTransactionDateBetween(
             ExpenseType type, LocalDate startDate, LocalDate endDate);
 
-    // Filter by category and date range
+    // Lets Spring Data generate a query that returns records matching category and date range.
     List<Expense> findByCategoryAndTransactionDateBetween(
             ExpenseCategory category, LocalDate startDate, LocalDate endDate);
 
-    // Filter by all three: type, category, date range
+    // Lets Spring Data generate a query that returns records matching type, category, and date range.
     List<Expense> findByTypeAndCategoryAndTransactionDateBetween(
             ExpenseType type, ExpenseCategory category,
             LocalDate startDate, LocalDate endDate);
 
-    // Dynamic filter (no pagination)
+    // Runs one JPQL query where null parameters mean "do not filter by this field".
     @Query("SELECT e FROM Expense e WHERE " +
             "(:type IS NULL OR e.type = :type) AND " +
             "(:category IS NULL OR e.category = :category) AND " +
@@ -55,7 +55,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             @Param("endDate") LocalDate endDate
     );
 
-    // Dynamic filter WITH pagination and sorting
+    // Runs the same optional filters as findByFilters, but returns one page using Pageable sorting.
     @Query("SELECT e FROM Expense e WHERE " +
             "(:type IS NULL OR e.type = :type) AND " +
             "(:category IS NULL OR e.category = :category) AND " +

@@ -15,7 +15,7 @@ import java.util.Map;
 @RestControllerAdvice(basePackages = "com.comp4442.expensetracker.controller")
 public class GlobalExceptionHandler {
 
-    // Handle @Valid validation failures
+    // Converts validation errors from @Valid request bodies into a readable field-by-field response.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new LinkedHashMap<>();
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    // Handle ResponseStatusException (e.g. 404 Not Found)
+    // Converts exceptions with explicit HTTP status codes, such as not-found errors, into API errors.
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) {
         ErrorResponse response = new ErrorResponse(
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(response);
     }
 
-    // Handle invalid JSON or unreadable request body
+    // Returns a bad-request response when JSON cannot be parsed or contains invalid enum values.
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         ErrorResponse response = new ErrorResponse(
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    // Handle IllegalArgumentException (e.g. invalid enum value)
+    // Returns a bad-request response for illegal argument errors raised during request handling.
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorResponse response = new ErrorResponse(

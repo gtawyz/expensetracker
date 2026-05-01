@@ -31,6 +31,7 @@ class ExportServiceImplTest {
     @InjectMocks
     private ExportServiceImpl exportService;
 
+    // Checks that exporting with records includes the CSV header and expected field values.
     @Test
     @DisplayName("Should export expenses to CSV with correct headers and data")
     void exportCsv_WithData() {
@@ -56,6 +57,7 @@ class ExportServiceImplTest {
         assertTrue(csv.contains("FOOD"));
     }
 
+    // Checks that exporting with no records still produces a valid CSV header row.
     @Test
     @DisplayName("Should export empty CSV with only headers when no data")
     void exportCsv_Empty() {
@@ -69,6 +71,7 @@ class ExportServiceImplTest {
         assertEquals(1, lines.length);
     }
 
+    // Checks that multiple records are written as separate CSV data rows.
     @Test
     @DisplayName("Should handle multiple expenses in CSV")
     void exportCsv_MultipleRecords() {
